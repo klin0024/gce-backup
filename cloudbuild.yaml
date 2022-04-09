@@ -1,0 +1,27 @@
+---
+steps:
+
+  - name: us-central1-docker.pkg.dev/gcp-expert-sandbox-allen/demo/gce-backup:v1
+    entrypoint: /bin/bash
+    args: ["-x", "$_BACKUP_SCRIPT"]
+
+options:
+  env:
+  - TZ=$_TIMEZONE
+  - instances=$_INSTANCES
+  - project=$_PROJECT_ID
+  - location=$_LOCATION
+  - retainDays=$_RETAIN_DAYS
+
+substitutions:
+  _TIMEZONE: Asia/Taipei
+  _PROJECT_ID: gcp-expert-sandbox-allen
+  #_PROJECT_ID: $PROJECT_ID
+  _INSTANCES: docker:us-central1-a win2016:us-central1-a
+  _LOCATION: us-central1
+  _RETAIN_DAYS: "7"
+  _BACKUP_SCRIPT: /gce-backup.sh
+  
+
+
+timeout: 6000s
