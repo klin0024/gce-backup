@@ -4,12 +4,29 @@
 
 ## Configure GCE Backup
 
-1. create the cloud source repository
+1. build the container image
+```
+git clone https://github.com/klin0024/gce-backup.git
+cd gce-backup
+docker build docker/ -t <YOUR-IMAGE>
+docker push <YOUR-IMAGE>
+```
+
+2. edit the cloudbuild.yaml
+```
+vi cloudbuild.yaml
+# modify the source of the container image
+_IMAGE: <YOUR-IMAGE>
+# modify project id
+_PROJECT_ID: <YOUR-PROJECT-ID>
+```
+
+3. create the cloud source repository
 ```
 gcloud source repos create gce-backup
 ```
 
-2. configure credencial for the cloud source repository
+4. configure credencial for the cloud source repository
 ```
 touch ~/.gitcookies
 chmod 0600 ~/.gitcookies
@@ -17,20 +34,20 @@ git config --global http.cookiefile ~/.gitcookies
 echo "source.developers.google.com FALSE / TRUE 2147483647 o git-user=$(gcloud auth print-access-token)" > ~/.gitcookies
 ```
 
-3. push the source code to the cloud source repository
+5. push the source code to the cloud source repository
 ```
-git clone https://github.com/klin0024/gce-backup.git
-cd gce-backup
-git remote add google https://source.developers.google.com/p/gcp-expert-sandbox-allen/r/gce-backup
+git remote add google https://source.developers.google.com/p/<YOUR-PROJECT-ID>/r/gce-backup
+git add cloudbuild.yaml
+git commit -m "commit"
 git push google
 ```
 
-4. create the Cloud Pub/Sub topics 
+6. create the Cloud Pub/Sub topics 
 ```
 gcloud pubsub topics create gce-backup --project=<YOUR-PROJECT-ID>
 ```
 
-5. create the Cloud Build triggers
+7. create the Cloud Build triggers
 ```
 gcloud alpha builds triggers create pubsub --project=<YOUR-PROJECT-ID> \
 --name=gce-backup \
@@ -39,7 +56,7 @@ gcloud alpha builds triggers create pubsub --project=<YOUR-PROJECT-ID> \
 --repo=https://source.developers.google.com/p/<YOUR-PROJECT-ID>/r/gce-backup --branch=master --build-config=cloudbuild.yaml
 ```
 
-7. create a Cloud Scheduler job 
+8. create a Cloud Scheduler job 
 ```
 gcloud scheduler jobs create pubsub gce-backup --project=<YOUR-PROJECT-ID> --location=<YOUR-LOCATION> \
 --schedule "15 2 * * *" --time-zone='<YOUR-TIMEZONE>' \
