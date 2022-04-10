@@ -21,6 +21,10 @@ vi cloudbuild.yaml
 _IMAGE: <YOUR-IMAGE>
 # modify project id
 _PROJECT_ID: <YOUR-PROJECT-ID>
+# modify timezone
+_TIMEZONE: <YOUR-TIMEZONE>
+# modify the backup storage location
+_LOCATION: <YOUR-LOCATION>
 ```
 
 3. create the cloud source repository
