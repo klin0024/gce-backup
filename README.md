@@ -1,6 +1,6 @@
 # GCE Backup Overview
 
-
+![overview](overview.JPG)
 
 ## Configure GCE Backup
 
@@ -53,13 +53,18 @@ gcloud alpha builds triggers create pubsub --project=<YOUR-PROJECT-ID> \
 --name=gce-backup \
 --topic=projects/<YOUR-PROJECT-ID>/topics/gce-backup \
 --substitutions=_INSTANCES='$(body.message.data.instances)',_RETAIN_DAYS='$(body.message.data.retainDays)' \
---repo=https://source.developers.google.com/p/<YOUR-PROJECT-ID>/r/gce-backup --branch=master --build-config=cloudbuild.yaml
+--repo=https://source.developers.google.com/p/<YOUR-PROJECT-ID>/r/gce-backup --branch=master \
+--build-config=cloudbuild.yaml
 ```
 
 8. create a Cloud Scheduler job 
+Parameter |Type |Value |Description
+:---|:---|:---|:---
+instances |string |"< GCE 1 >:< AZ > < GCE 2 >:< AZ >" |Backup GCE
+retainDays |integer |"7"  |Backup Retain Days
 ```
 gcloud scheduler jobs create pubsub gce-backup --project=<YOUR-PROJECT-ID> --location=<YOUR-LOCATION> \
 --schedule "15 2 * * *" --time-zone='<YOUR-TIMEZONE>' \
 --topic gce-backup \
---message-body '{"instances":"bastion-vm:us-central1-c docker:us-central1-a win2016:us-central1-a","retainDays":"7"}'
+--message-body '{"instances":"gce1:us-central1-c gce2:us-central1-a gce3:us-central1-a","retainDays":"7"}'
 ```
