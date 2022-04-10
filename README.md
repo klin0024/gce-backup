@@ -1,6 +1,6 @@
 # GCE Backup Overview
 
-![overview](overview.JPG)
+![overview](img/overview.JPG)
 
 ## Configure GCE Backup
 
