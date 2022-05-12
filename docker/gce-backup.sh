@@ -6,8 +6,8 @@
 #retainDays=7
 
 currentDatatime=$(date +"%Y-%m-%d-%H-%M")
-retainDatatime=$(date +"%Y-%m-%d" --date="-${retainDays}days")
-#retainDatatime=$(date +"%Y-%m-%dT%H:%M" --date="-${retainDays}days")
+retainDatatime=$(date +"%Y-%m-%d" --date="$[1-${retainDays}]days")
+#retainDatatime=$(date +"%Y-%m-%dT%H:%M" --date="$[1-${retainDays}]days")
 
 getInstance(){
 	echo $1|cut -d : -f 1
